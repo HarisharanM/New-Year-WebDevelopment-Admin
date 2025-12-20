@@ -1,36 +1,31 @@
-import { useEffect } from 'react';
-import Page from './Components/Page';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./components/Login";
+import AdminDashboard from "./components/AdminDashboard";
+import ScanPass from "./components/ScanPass";
+
+// Venue Admin
+import VenueLogin from "./venueAdmin/VenueLogin";
+import VenueDashboard from "./venueAdmin/VenueDashboard";
+
+import "./App.css";
 
 function App() {
-  useEffect(() => {
-    // Disable right-click globally
-    const handleContextMenu = (e) => e.preventDefault();
-    document.addEventListener('contextmenu', handleContextMenu);
-
-    // Disable common inspect shortcuts (F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+C)
-    const handleKeyDown = (e) => {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C')) ||
-        (e.ctrlKey && e.key === 'U')
-      ) {
-        e.preventDefault();
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-
-    // Cleanup
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
   return (
-    <>
-      <Page />
-    </>
+    <BrowserRouter>
+      <Routes>
+
+        {/* MAIN COMPANY ADMIN */}
+        <Route path="/" element={<Login />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/scan" element={<ScanPass />} />
+
+        {/* VENUE ADMINS */}
+        <Route path="/venue-login" element={<VenueLogin />} />
+        <Route path="/venue-dashboard" element={<VenueDashboard />} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
