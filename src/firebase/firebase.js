@@ -1,25 +1,17 @@
-// src/firebase.js
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Your Firebase project configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBetrPHvyoC_A4-zpiARficKkD65yIeTTg",
-  authDomain: "jobapplicationsystem-c2ec0.firebaseapp.com",
-  projectId: "jobapplicationsystem-c2ec0",
-  storageBucket: "jobapplicationsystem-c2ec0.appspot.com",
-  messagingSenderId: "1073596076185",
-  appId: "1:1073596076185:web:e96aa64a96e191aee4e808"
+  apiKey: "AIzaSyCpMaFwayMgTG98-TOee8jW3Jreq6I3MPc",
+  authDomain: "wcg-new-year.firebaseapp.com",
+  projectId: "wcg-new-year",
+  storageBucket: "wcg-new-year.appspot.com",
+  messagingSenderId: "250664588308",
+  appId: "1:250664588308:web:31cf6da0644100fd508301",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore and Storage
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-// Export everything
-export { app, db, storage };
+export const db = getFirestore(app);
+export const storage = getStorage(app);
