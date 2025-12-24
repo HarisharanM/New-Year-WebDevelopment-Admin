@@ -39,17 +39,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Login />} />
 
         <Route
-          path="/dashboard"
+          path="/Dashboard"
           element={<ProtectedRoute element={<Dashboard />} />}
         />
 
         <Route
-          path="/admin-dashboard"
+          path="/AdminDashboard"
           element={<ProtectedRoute element={<AdminDashboard />} />}
         />
 
         <Route
-          path="/scan-pass"
+          path="/ScanPass"
           element={<ProtectedRoute element={<ScanPass />} />}
         />
 

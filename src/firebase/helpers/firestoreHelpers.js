@@ -1,4 +1,3 @@
-
 import { db } from '../firebase';
 import {
   collection,
@@ -8,25 +7,28 @@ import {
   deleteDoc,
   updateDoc,
   setDoc,
+  query,
+  orderBy,
+  serverTimestamp,
 } from 'firebase/firestore';
-
 
 const participantCollection = collection(db, 'participants');
 
+/* ================= SAVE PARTICIPANT ================= */
 export const saveParticipant = async (formData, paymentData = null) => {
   try {
- 
     const participantId = `P${Date.now()}`;
 
-   
     const finalData = {
       participantId,
       ...formData,
-      createdAt: new Date().toISOString(),
-      ...(paymentData ? { payment: paymentData } : {}), 
+
+      // ✅ ALWAYS use Firestore timestamp going forward
+      createdAt: serverTimestamp(),
+
+      ...(paymentData ? { payment: paymentData } : {}),
     };
 
-  
     await setDoc(doc(db, 'participants', participantId), finalData);
 
     console.log('Participant saved with ID:', participantId);
@@ -37,18 +39,36 @@ export const saveParticipant = async (formData, paymentData = null) => {
   }
 };
 
-
+/* ================= GET ALL PARTICIPANTS (LATEST FIRST, SAFE) ================= */
 export const getAllParticipants = async () => {
   try {
-    const snapshot = await getDocs(participantCollection);
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const q = query(
+      participantCollection,
+      orderBy('createdAt', 'desc')
+    );
+
+    const snapshot = await getDocs(q);
+
+    const data = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data(),
+    }));
+
+    // 🛡️ SAFETY SORT (handles old/broken records)
+    data.sort((a, b) => {
+      const aTime = a.createdAt?.seconds || 0;
+      const bTime = b.createdAt?.seconds || 0;
+      return bTime - aTime;
+    });
+
+    return data;
   } catch (e) {
     console.error('Error fetching participants:', e);
     throw e;
   }
 };
 
-
+/* ================= UPDATE PARTICIPANT ================= */
 export const updateParticipant = async (participantId, updatedData) => {
   try {
     const docRef = doc(db, 'participants', participantId);
@@ -60,7 +80,7 @@ export const updateParticipant = async (participantId, updatedData) => {
   }
 };
 
-
+/* ================= DELETE PARTICIPANT ================= */
 export const deleteParticipant = async (participantId) => {
   try {
     const docRef = doc(db, 'participants', participantId);
@@ -72,15 +92,18 @@ export const deleteParticipant = async (participantId) => {
   }
 };
 
-
-// Get participant by ID
+/* ================= GET PARTICIPANT BY ID ================= */
 export const getParticipantById = async (id) => {
-  const docRef = doc(db, "participants", id);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return { participantId: docSnap.id, ...docSnap.data() };
-  } else {
+  try {
+    const docRef = doc(db, "participants", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { participantId: docSnap.id, ...docSnap.data() };
+    }
+    return null;
+  } catch (e) {
+    console.error("Error fetching participant:", e);
     return null;
   }
 };
-
