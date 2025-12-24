@@ -2,26 +2,29 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// Main Admin components
+// ================= MAIN ADMIN =================
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import ScanPass from "./components/ScanPass";
-import Dashboard from "./components/Dashboard";
-import Login from "./components/Login";
 
-// Venue Admin components
+// ================= VENUE ADMIN =================
 import VenueLogin from "./venueAdmin/VenueLogin";
 import VenueDashboard from "./venueAdmin/VenueDashboard";
+import VenueScanPass from "./components/ScanPass";
 
-// CSS
+// ================= CSS =================
 import "./index.css";
 
-// Main Admin Protected Route
+// ================= PROTECTED ROUTES =================
+
+// Main Admin
 const ProtectedRoute = ({ element }) => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn");
   return isLoggedIn ? element : <Navigate to="/" replace />;
 };
 
-// Venue Admin Protected Route
+// Venue Admin
 const VenueProtectedRoute = ({ element }) => {
   const venueAdmin = sessionStorage.getItem("venueAdmin");
   return venueAdmin ? element : <Navigate to="/venue-login" replace />;
@@ -32,26 +35,37 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Routes>
 
-        {/* ================= MAIN ADMIN ================= */}
+        {/* ================= MAIN ADMIN ROUTES ================= */}
         <Route path="/" element={<Login />} />
+
         <Route
-          path="/Dashboard"
+          path="/dashboard"
           element={<ProtectedRoute element={<Dashboard />} />}
         />
+
         <Route
-          path="/AdminDashboard"
+          path="/admin-dashboard"
           element={<ProtectedRoute element={<AdminDashboard />} />}
         />
+
         <Route
-          path="/ScanPass"
+          path="/scan-pass"
           element={<ProtectedRoute element={<ScanPass />} />}
         />
 
-        {/* ================= VENUE ADMIN ================= */}
+        {/* ================= VENUE ADMIN ROUTES ================= */}
         <Route path="/venue-login" element={<VenueLogin />} />
+
         <Route
           path="/venue-dashboard"
           element={<VenueProtectedRoute element={<VenueDashboard />} />}
+        />
+
+        <Route
+          path="/venue-scan"
+          element={
+            <VenueProtectedRoute element={<VenueScanPass mode="venue" />} />
+          }
         />
 
         {/* ================= FALLBACK ================= */}

@@ -4,12 +4,12 @@ export const VENUE_ADMINS = {
   BHOPAL: {
     username: "bhopal_admin",
     password: "bhopal@123",
-    venueId: "BHOPAL",
+    venueId: "bhopal",
   },
   MUMBAI: {
     username: "mumbai_admin",
     password: "mumbai@123",
-    venueId: "MUMBAI",
+    venueId: "mumbai",
   },
 };
 
